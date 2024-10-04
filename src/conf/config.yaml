@@ -19,7 +19,7 @@ defaults:
 
 wandb:
   log: true
-  entity: jayelm  # Change this to your wandb username.
+  entity: siddharthganjoo  # Change this to your wandb username.
   project: gist
   group: ${wandb.tag}-${training.gist.condition}-${training.gist.num_gist_tokens}tok-${basename:${model.model_name_or_path}}-${basename:${data.dataset_name}}
   name: ${wandb.group}-run-${training.seed}

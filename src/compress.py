@@ -41,7 +41,7 @@ def main(
     input: str = "",
     num_gist_tokens: Optional[int] = 1,
     cache_dir: str = ".cache",
-    precision: str = "fp32",
+    precision: str = "fp16",
     max_new_tokens: int = 512,
     base_llama_path: Optional[str] = None,
 ) -> None:
@@ -78,31 +78,31 @@ def main(
     else:
         raise ValueError(f"Model type {model_name_or_path} not supported")
 
-    if model_name_or_path in {
-        "jayelm/llama-7b-gist-1",
-        "jayelm/llama-7b-pos_control-1",
-        "jayelm/llama-7b-neg_control-1",
-    }:
-        # Load with weight diff file
-        if base_llama_path is None:
-            raise ValueError(
-                f"{model_name_or_path} is a weight diff huggingface repo. "
-                "You must specify a `base_llama_path` for this to work."
-            )
-        else:
-            print("Weight diff detected. Applying to original model...")
-        model, _ = weight_diff.recover(
-            path_raw=base_llama_path,
-            path_diff=model_name_or_path,
-            test_inference=False,
-            cache_dir=cache_dir,
-        )
-    else:
-        model = model_cls.from_pretrained(
+    # if model_name_or_path in {
+    #     "jayelm/llama-7b-gist-1",
+    #     "jayelm/llama-7b-pos_control-1",
+    #     "jayelm/llama-7b-neg_control-1",
+    # }:
+    #     # Load with weight diff file
+    #     if base_llama_path is None:
+    #         raise ValueError(
+    #             f"{model_name_or_path} is a weight diff huggingface repo. "
+    #             "You must specify a `base_llama_path` for this to work."
+    #         )
+    #     else:
+    #         print("Weight diff detected. Applying to original model...")
+    #     model, _ = weight_diff.recover(
+    #         path_raw=base_llama_path,
+    #         path_diff=model_name_or_path,
+    #         test_inference=False,
+    #         cache_dir=cache_dir,
+    #     )
+    # else:
+    model = model_cls.from_pretrained(
             model_name_or_path,
             config=config,
             cache_dir=cache_dir,
-        )
+        )    
 
     dtypes = {
         "bf16": torch.bfloat16,
